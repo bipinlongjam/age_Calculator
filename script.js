@@ -1,56 +1,68 @@
 const months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function ageCalculate() {
-  let today = new Date();
-  let inputDate = new Date(document.getElementById("date-input").value);
-  let birthMonth, birthDate, birthYear;
+  let birthInputDate = new Date(
+    document.getElementById("birth-date-input").value
+  );
+  let CurrentInputDate = new Date(
+    document.getElementById("current-date-input").value
+  );
+  let calculated_month, calculated_date, calculated_year;
 
   let birthDetails = {
-    date: inputDate.getDate(),
-    month: inputDate.getMonth() + 1,
-    year: inputDate.getFullYear(),
+    birthDate: birthInputDate.getDate(),
+    birthMonth: birthInputDate.getMonth() + 1,
+    birthYear: birthInputDate.getFullYear(),
   };
-  let currentYear = today.getFullYear();
-  let currentMonth = today.getMonth() + 1;
-  let currentdate = today.getDate();
+  let currentDetails = {
+    currentDate: CurrentInputDate.getDate(),
+    currentMonth: CurrentInputDate.getMonth() + 1,
+    currentYear: CurrentInputDate.getFullYear(),
+  };
+
+  leapChecker(currentDetails.currentYear);
 
   if (
-    birthDetails.year > currentYear ||
-    (birthDetails.month > currentMonth && birthDetails.year == currentYear) ||
-    (birthDetails.date > currentdate && birthDetails.year == currentYear)
+    birthDetails.birthYear > currentDetails.currentYear ||
+    (birthDetails.birthMonth > currentDetails.currentMonth &&
+      birthDetails.birthYear == currentDetails.currentYear) ||
+    (birthDetails.birthDate > currentDetails.currentDate &&
+      birthDetails.birthMonth == currentDetails.currentMonth &&
+      birthDetails.birthYear == currentDetails.currentYear)
   ) {
-    alert("Not Born Yet");
+    alert("NOT BORN YET");
     return;
   }
-  birthYear = currentYear - birthDetails.year;
 
-  if (currentMonth >= birthDetails.month) {
-    birthMonth = currentMonth - birthDetails.month;
+  calculated_year = currentDetails.currentYear - birthDetails.birthYear;
+
+  if (currentDetails.currentMonth >= birthDetails.birthMonth) {
+    calculated_month = currentDetails.currentMonth - birthDetails.birthMonth;
   } else {
-    birthYear--;
-    birthMonth = 12 + currentMonth - birthDetails.month;
+    calculated_year--;
+    calculated_month =
+      12 + currentDetails.currentMonth - birthDetails.birthMonth;
   }
 
-  if (currentdate >= birthDetails.date) {
-    birthDate = currentdate - birthDetails.date;
+  if (currentDetails.currentDate >= birthDetails.birthDate) {
+    calculated_date = currentDetails.currentDate - birthDetails.birthDate;
   } else {
-    birthMonth--;
-    let days = months[currentMonth - 2];
-    birthDate = days + currentdate - birthDetails.date;
-    if (birthMonth < 0) {
-      birthMonth = 11;
-      birthYear--;
+    calculated_month--;
+    let days = months[currentDetails.currentMonth - 2];
+    calculated_date =
+      days + currentDetails.currentDate - birthDetails.birthDate;
+    if (calculated_month < 0) {
+      calculated_month = 11;
+      calculated_year--;
     }
   }
-  displayResult(birthDate, birthMonth, birthYear);
+  displayResult(calculated_date, calculated_month, calculated_year);
 }
-
 function displayResult(bDate, bMonth, bYear) {
   document.getElementById("years").textContent = bYear;
   document.getElementById("months").textContent = bMonth;
   document.getElementById("days").textContent = bDate;
 }
-
 function leapChecker(year) {
   if (year % 4 == 0 || (year % 100 == 0 && year % 400 == 0)) {
     months[1] = 29;
